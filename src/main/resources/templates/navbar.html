@@ -1,37 +1,34 @@
-
-<!-- 내비게이션 바의 스타일과 레이아웃을 설정한 것 -->
-<nav th:fragment="navbarFragment" class="navbar navbar-expand-lg border-bottom"
-	style="background-color: #ADD8E6;">
-	<div class="container-fluid">
-		<!-- 'SBB'를 클릭하면 메인 페이지로 이동하도록 -->
-		<a class="navbar-brand" href="/">게시판</a>
-		<!-- 내비게이션 바의 메뉴에 버튼을 추가하기 위해 부트스트랩의 속성 활용 -->
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-			data-bs-target="#navbarSupportedContent"
-			aria-controls="navbarSupportedContent" aria-expanded="false"
-			aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<!-- 화면 크기에 따라 내비게이션 바의 메뉴 노출을 관리함 -->
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<!-- 내비게이션 바의 메뉴 오른쪽 왼쪽 여백을 지정 -->
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<!-- 로그인 텍스트를 표시하고 이를 클릭하여 이동할 페이지를 설정함 -->
-				<li class="nav-item">
-					<!-- sec:authorize : 권한에 대한 부분 로그인을 했는지
-					isAnonymous을 이용해서 로그인 여부 확인-->
-    			<a class="nav-link" sec:authorize="isAnonymous()" 
-    			th:href="@{/user/login}">로그인</a>
-    			<!-- 로그인이 된 상태이면  isAuthenticated 로그아웃이 보이고
-    				 로그인이 안 된 상태이면 isAnonymous 로그인이 보임-->
-    			<a class="nav-link" sec:authorize="isAuthenticated()" 
-    			th:href="@{/user/logout}">로그아웃</a>
-				</li>
-
-				<li class="nav-item">
-				<a class="nav-link" th:href="@{/user/signup}">회원가입</a>
-				</li>
-			</ul>
-		</div>
-	</div>
+<nav th:fragment="navbarFragment" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Fitness board</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <!-- 로그인 링크 -->
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" th:href="@{/user/login}">로그인</a>
+                </li>
+                <!-- 회원 가입 링크 -->
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" th:href="@{/user/signup}">회원가입</a>
+                </li>
+                <!-- 사용자 이름과 회원 정보, 수정, 로그아웃 링크 -->
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <span class="nav-link" th:text="${#authentication.getName()}"></span>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/user/info}">회원 정보</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/user/modify}">정보 수정</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/user/logout}">로그아웃</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </nav>

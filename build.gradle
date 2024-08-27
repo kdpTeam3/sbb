@@ -58,6 +58,7 @@ implementation 'org.springframework.boot:spring-boot-starter-security'
 implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' 
     // Thymeleaf 템플릿 엔진과 Spring Security를 함께 사용할 수 있게 도와주는 라이브러리입니다.
     // 예를 들어, HTML 페이지에서 로그인 여부에 따라 다른 내용을 보여줄 때 사용합니다.
+runtimeOnly 'com.mysql:mysql-connector-j'
 
 }
 
