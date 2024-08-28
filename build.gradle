@@ -60,6 +60,12 @@ implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     // 예를 들어, HTML 페이지에서 로그인 여부에 따라 다른 내용을 보여줄 때 사용합니다.
 runtimeOnly 'com.mysql:mysql-connector-j'
 
+    // Spring Security OAuth2 Client
+implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+
+
+
 }
 
 
