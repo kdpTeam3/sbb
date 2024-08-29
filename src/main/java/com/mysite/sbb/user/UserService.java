@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.answer.AnswerRepository;
 import com.mysite.sbb.question.QuestionRepository;
 
@@ -32,11 +31,17 @@ public class UserService {
 
     public SiteUser getUser(String username) {
         Optional<SiteUser> siteUser = this.userRepository.findByUsername(username);
-        if (siteUser.isPresent()) {
-            return siteUser.get();
+        if(siteUser.isPresent()) {
+            System.out.println("User found: " + siteUser.get().getUsername());
         } else {
-            throw new DataNotFoundException("siteuser not found");
+            System.out.println("User not found with username: " + username);
         }
+        return siteUser.orElse(null);  // 사용자 정보를 찾지 못하면 null을 반환
+    }
+
+    public SiteUser getUserById(String id) {
+        Optional<SiteUser> siteUser = this.userRepository.findById(Long.parseLong(id));
+        return siteUser.orElse(null);  // 사용자 정보를 찾지 못하면 null을 반환
     }
 
     public void modify(SiteUser siteUser, String username, String email) {

@@ -35,7 +35,7 @@ public class SecurityConfig {
             )
             .formLogin((formLogin) -> formLogin
                 .loginPage("/user/login")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/", true) // 로그인 성공 시 메인 페이지로 리디렉트
             )
             .logout((logout) -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
@@ -45,7 +45,7 @@ public class SecurityConfig {
             .oauth2Login(oauth2Login ->
                 oauth2Login
                     .loginPage("/user/login")
-                    .defaultSuccessUrl("/")
+                    .defaultSuccessUrl("/")  // 로그인 성공 후 메인 페이지로 이동
                     .userInfoEndpoint(userInfoEndpoint ->
                         userInfoEndpoint.userService(oauth2UserService())
                     )

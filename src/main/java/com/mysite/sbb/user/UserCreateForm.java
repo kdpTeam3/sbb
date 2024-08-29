@@ -3,7 +3,6 @@ package com.mysite.sbb.user;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,7 @@ import lombok.Setter;
 @Setter  // Lombok을 사용해 setter 메서드를 자동으로 생성합니다.
 public class UserCreateForm {
 
-    // 사용자 ID: 영문자와 숫자로만 구성되며, 5자 이상 25자 이하로 제한
+    // 사용자 ID: 영문자와 숫자로만 구성되며, 5자 이상 15자 이하로 제한
     @Pattern(regexp = "^[a-zA-Z0-9]{5,15}$", message = "사용자 ID는 영문자와 숫자만 사용할 수 있으며, 5자 이상 15자 이하로 입력해주세요.")
     @NotEmpty(message = "사용자 ID는 필수 항목입니다.")
     private String username;

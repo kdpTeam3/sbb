@@ -13,8 +13,6 @@ java {
 	}
 }
 
-
-
 repositories {
 	mavenCentral()
 }
@@ -24,50 +22,18 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	
-	// 소스 코드 내용 변경시 서버 재시작 없이 자동으로 재시작해주는 라이브러리
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	// getter,setter, 생성자를 자동으로 만들어주는 라이브러리
 	compileOnly 'org.projectlombok:lombok' 
 	annotationProcessor 'org.projectlombok:lombok'
-	// 개발용 경량화 데이터베이스
-	runtimeOnly 'com.h2database:h2'
-	// jpa를 사용하기 위해 선언
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	
-	// JUnit 5 (Jupiter) 테스트 라이브러리 추가
-	testImplementation 'org.junit.jupiter:junit-jupiter'
-
-	// 테스트 실행 시 필요한 런처 추가
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	
-	
-	// Spring Boot와 Thymeleaf 통합을 위한 스타터 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-
-	// Thymeleaf 템플릿에서 레이아웃 기능을 제공하는 Thymeleaf Layout Dialect 의존성
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-	
-implementation 'org.springframework.boot:spring-boot-starter-validation' 
-    // 데이터 입력 값이 올바른지 확인하는 기능을 추가해주는 라이브러리입니다. 
-    // 예를 들어, 사용자 이름이 비어있으면 안 된다고 검사할 때 사용합니다.
-
-implementation 'org.springframework.boot:spring-boot-starter-security' 
-    // 로그인, 로그아웃, 권한 부여 등 보안 관련 기능을 쉽게 추가할 수 있는 라이브러리입니다.
-    // 웹 애플리케이션에 인증과 권한 기능을 구현할 때 사용합니다.
-
-implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' 
-    // Thymeleaf 템플릿 엔진과 Spring Security를 함께 사용할 수 있게 도와주는 라이브러리입니다.
-    // 예를 들어, HTML 페이지에서 로그인 여부에 따라 다른 내용을 보여줄 때 사용합니다.
-runtimeOnly 'com.mysql:mysql-connector-j'
-
-    // Spring Security OAuth2 Client
-implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-
-
-
+	implementation 'org.springframework.boot:spring-boot-starter-validation' 
+	implementation 'org.springframework.boot:spring-boot-starter-security' 
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' 
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
-
 
 tasks.named('test') {
 	useJUnitPlatform()

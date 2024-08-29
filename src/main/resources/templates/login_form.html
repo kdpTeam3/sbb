@@ -1,39 +1,35 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그인</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="card p-5 shadow-lg" style="width: 400px;">
         <h3 class="text-center mb-4">로그인</h3>
         <form th:action="@{/user/login}" method="post">
-            <!-- 로그인 오류 메시지를 표시합니다. -->
             <div th:if="${param.error}">
                 <div class="alert alert-danger text-center">
                     사용자 ID 또는 비밀번호를 확인해주세요.
                 </div>
             </div>
-            
-            <!-- 사용자 ID 입력 필드 -->
             <div class="mb-3">
                 <label for="username" class="form-label">사용자 ID</label>
                 <input type="text" name="username" id="username" class="form-control">
             </div>
-            
-            <!-- 비밀번호 입력 필드 -->
             <div class="mb-3">
                 <label for="password" class="form-label">비밀번호</label>
                 <input type="password" name="password" id="password" class="form-control">
             </div>
-            
-            <!-- 로그인 버튼 -->
             <button type="submit" class="btn btn-primary w-100">로그인</button>
         </form>
-        
-        <!-- 네이버 로그인 버튼 -->
-<!-- 네이버 로그인 버튼 -->
-	<div class="text-center mt-4 d-flex">
-    <a th:href="@{/oauth2/authorization/naver}">
-        <img src="/images/naver_login.png" alt="네이버로 로그인" style="width:50px;">
-    </a>
-</div>
-
+        <div class="text-center mt-4 d-flex">
+            <a th:href="@{/oauth2/authorization/naver}">
+                <img src="/images/naver_login.png" alt="네이버로 로그인" style="width:50px;">
+            </a>
+        </div>
     </div>
 </div>
+</body>
 </html>

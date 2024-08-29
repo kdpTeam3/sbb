@@ -1,7 +1,6 @@
 package com.mysite.sbb.user;
 
 import java.security.Principal;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -22,12 +22,20 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/signup")
-    public String signup(UserCreateForm userCreateForm) {
+    public String signup(UserCreateForm userCreateForm, HttpSession session, Principal principal, Model model) {
+        if (principal != null) {
+            return "redirect:/";
+        }
+        String email = (String) session.getAttribute("naverEmail");
+        if (email != null) {
+            userCreateForm.setEmail(email);
+        }
+        model.addAttribute("userCreateForm", userCreateForm);
         return "signup_form";
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult) {
+    public String signup(@Valid UserCreateForm userCreateForm, BindingResult bindingResult, HttpSession session) {
         if (bindingResult.hasErrors()) {
             return "signup_form";
         }
@@ -39,6 +47,7 @@ public class UserController {
 
         try {
             userService.create(userCreateForm.getUsername(), userCreateForm.getEmail(), userCreateForm.getPassword1());
+            session.removeAttribute("naverEmail");
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -53,14 +62,27 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpSession session) {
+        String email = (String) session.getAttribute("naverEmail");
+        if (email != null) {
+            return "redirect:/user/signup?email=" + email;
+        }
         return "login_form";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify")
-    public String userModifyForm(UserModifyForm userModifyForm, Principal principal) {
+    public String userModifyForm(UserModifyForm userModifyForm, Principal principal, Model model) {
         SiteUser siteUser = this.userService.getUser(principal.getName());
+        
+        // 로그로 Principal 확인
+        System.out.println("Logged in user: " + principal.getName());
+
+        if (siteUser == null) {
+            model.addAttribute("errorMessage", "사용자 정보를 찾을 수 없습니다.");
+            return "redirect:/user/login";
+        }
+
         userModifyForm.setUsername(siteUser.getUsername());
         userModifyForm.setEmail(siteUser.getEmail());
         return "user_modify_form";

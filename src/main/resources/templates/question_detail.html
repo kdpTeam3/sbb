@@ -6,20 +6,18 @@
 <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
 <div class="card my-3">
     <div class="card-body">
-        <div class="card-text" style="white-space: pre-line;"
-             th:text="${question.content}"></div>
+        <div class="card-text" style="white-space: pre-line;" th:text="${question.content}"></div>
         <div class="d-flex justify-content-end">
         	
         	<div th:if="${question.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
-        				<div class="mb-2">수정</div>
-        				<div th:text="${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+        		<div class="mb-2">수정</div>
+        		<div th:text="${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
         	</div>
         
             <div class="badge bg-light text-dark p-2 text-start">
                 <!-- 글쓴이를 표시하기 위해 사용 -->
                 <div class="mb-2">
-                    <span th:if="${question.author != null}"
-                          th:text="${question.author.username}"></span>
+                    <span th:if="${question.author != null}" th:text="${question.author.username}"></span>
                 </div>
                 <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
             </div>
@@ -27,36 +25,26 @@
         <div class="my-3">
             <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
                sec:authorize="isAuthenticated()"
-               th:if="${question.author != null and #authentication.getPrincipal().username == question.author.username}"
+               th:if="${question.author != null and #authentication.name == question.author.username}"
                th:text="수정"></a>
 
-            <a href="javascript:void(0);"
-               th:data-uri="@{|/question/delete/${question.id}|}"
+            <a href="javascript:void(0);" th:data-uri="@{|/question/delete/${question.id}|}"
                class="delete btn btn-sm btn-outline-secondary"
                sec:authorize="isAuthenticated()"
-               th:if="${question.author != null and #authentication.getPrincipal().username == question.author.username}"
+               th:if="${question.author != null and #authentication.name == question.author.username}"
                th:text="삭제"></a>
         </div>
     </div>
 </div>
 
-<!-- 답변이 몇 개 있는지 알기 위해서 answerList size값을 화면에 보여줌
-이런게 바로 가능한 이유는 엔티티 클래스에서 one to many many to one 참조 관계를 설정해놨기 때문에
-Question 객체에서 answerList 접근이 가능 그럼 사이즈 값도 바로 받아 줄 수 있다
--->
-
 <!-- 답변 개수 표시 -->
 
 <h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
 
-<!-- answerList로 부터 반복문을 돌림 답변이 하나일수도 있고 여러개일수도 있으므로 
-    th:each를 이용해서 답변리스트를 출력해줌
- -->
- <!-- 답변 반복 시작 -->
+<!-- 답변 반복 시작 -->
 <div class="card my-3" th:each="answer : ${question.answerList}">
     <div class="card-body">
-        <div class="card-text" style="white-space: pre-line;"
-             th:text="${answer.content}"></div>
+        <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
         <div class="d-flex justify-content-end">
         
             <div th:if="${answer.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
@@ -66,41 +54,34 @@ Question 객체에서 answerList 접근이 가능 그럼 사이즈 값도 바로
             <div class="badge bg-light text-dark p-2 text-start">
                 <!-- 글쓴이를 표시하기 위해 사용 -->
                 <div class="mb-2">
-                    <span th:if="${answer.author != null}"
-                          th:text="${answer.author.username}"></span>
+                    <span th:if="${answer.author != null}" th:text="${answer.author.username}"></span>
                 </div>
                 <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
             </div>
         </div>
  
 		<div class="my-3">
-    		<a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+    		<a th:href="@{/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
        			sec:authorize="isAuthenticated()"
-       			th:if="${answer.author != null and #authentication.getPrincipal().username == answer.author.username}"
+       			th:if="${answer.author != null and #authentication.name == answer.author.username}"
        			th:text="수정"></a>
 			<a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}}"
     			class="delete btn btn-sm btn-outline-secondary"
     			sec:authorize="isAuthenticated()"
-    			th:if="${answer.author != null and #authentication.getPrincipal().username == answer.author.username}"
+    			th:if="${answer.author != null and #authentication.name == answer.author.username}"
    				th:text="삭제"></a>
-
-
         </div>
     </div>
 </div>
 <!-- 답변 반복 끝 -->
 
 <!-- 답변 작성 -->
-<form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}"
-      method="post" class="my-3">
+<form th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}" method="post" class="my-3">
     <div th:replace="~{form_errors :: formErrorsFragment}"></div>
-    <textarea sec:authorize="isAnonymous()" disabled
-              th:field="*{content}" class="form-control" rows="10"></textarea>
-    <textarea sec:authorize="isAuthenticated()"
-              th:field="*{content}" class="form-control" rows="10"></textarea>
+    <textarea sec:authorize="isAnonymous()" disabled th:field="*{content}" class="form-control" rows="10"></textarea>
+    <textarea sec:authorize="isAuthenticated()" th:field="*{content}" class="form-control" rows="10"></textarea>
 
     <input type="submit" value="답변등록" class="btn btn-primary my-2">
-
 </form>
 
 </div>

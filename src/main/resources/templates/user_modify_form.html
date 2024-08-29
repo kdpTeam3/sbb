@@ -16,7 +16,9 @@
     <div class="card shadow-lg p-4" style="width: 500px;">
         <h4 class="card-title text-center mb-4">회원 정보 수정</h4>
         <form th:action="@{/user/modify}" th:object="${userModifyForm}" method="post">
+            <!-- 에러 메시지 표시 -->
             <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+            
             <div class="mb-3">
                 <label for="username" class="form-label">사용자 이름</label>
                 <input type="text" th:field="*{username}" class="form-control" id="username">
