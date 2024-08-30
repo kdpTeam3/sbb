@@ -2,6 +2,7 @@ package com.mysite.sbb.user;
 
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,9 +40,15 @@ public class UserService {
         return siteUser.orElse(null);  // 사용자 정보를 찾지 못하면 null을 반환
     }
 
-    public SiteUser getUserById(String id) {
-        Optional<SiteUser> siteUser = this.userRepository.findById(Long.parseLong(id));
-        return siteUser.orElse(null);  // 사용자 정보를 찾지 못하면 null을 반환
+    public SiteUser getUserById(String userId) {
+        try {
+            // String을 Long으로 변환
+            Long id = Long.parseLong(userId);
+            Optional<SiteUser> user = userRepository.findById(id);
+            return user.orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + userId));
+        } catch (NumberFormatException e) {
+            throw new UsernameNotFoundException("Invalid user ID format: " + userId);
+        }
     }
 
     public void modify(SiteUser siteUser, String username, String email) {

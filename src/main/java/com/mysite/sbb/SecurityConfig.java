@@ -15,10 +15,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.mysite.sbb.user.CustomOAuth2UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,7 +52,7 @@ public class SecurityConfig {
                     .loginPage("/user/login")
                     .defaultSuccessUrl("/")  // 로그인 성공 후 메인 페이지로 이동
                     .userInfoEndpoint(userInfoEndpoint ->
-                        userInfoEndpoint.userService(oauth2UserService())
+                        userInfoEndpoint.userService(customOAuth2UserService)
                     )
             );
         return http.build();
@@ -61,10 +66,5 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public CustomOAuth2UserService oauth2UserService() {
-        return new CustomOAuth2UserService();
     }
 }

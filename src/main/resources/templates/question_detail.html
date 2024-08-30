@@ -61,15 +61,15 @@
         </div>
  
 		<div class="my-3">
-    		<a th:href="@{/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-       			sec:authorize="isAuthenticated()"
-       			th:if="${answer.author != null and #authentication.name == answer.author.username}"
-       			th:text="수정"></a>
-			<a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}}"
-    			class="delete btn btn-sm btn-outline-secondary"
-    			sec:authorize="isAuthenticated()"
-    			th:if="${answer.author != null and #authentication.name == answer.author.username}"
-   				th:text="삭제"></a>
+<a th:href="@{/answer/modify/{id}(id=${answer.id})}" class="btn btn-sm btn-outline-secondary"
+   sec:authorize="isAuthenticated()"
+   th:if="${answer.author != null and #authentication.name == answer.author.username}"
+   th:text="수정"></a>
+<a href="javascript:void(0);" th:data-uri="@{/answer/delete/{id}(id=${answer.id})}"
+   class="delete btn btn-sm btn-outline-secondary"
+   sec:authorize="isAuthenticated()"
+   th:if="${answer.author != null and #authentication.name == answer.author.username}"
+   th:text="삭제"></a>
         </div>
     </div>
 </div>

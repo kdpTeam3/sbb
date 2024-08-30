@@ -6,14 +6,27 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+
+import lombok.RequiredArgsConstructor;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
+    private UserService userService;
+
+    @Autowired
+    public CustomOAuth2UserService(@Lazy UserService userService) {
+        this.userService = userService;
+    }
+
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
@@ -22,13 +35,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         // 사용자 ID와 닉네임을 가져옵니다.
-        String userId = (String) response.get("id");
-        String nickname = (String) response.get("nickname");
+        String username = (String) response.get("nickname");
+
+        // 사용자 정보를 DB에 저장하거나 가져옵니다.
+        SiteUser user = userService.getUser(username);
+        if (user == null) {
+            user = new SiteUser();
+            user.setUsername(username);
+            user.setEmail((String) response.get("email"));
+            userService.create(user.getUsername(), user.getEmail(), "");
+        }
 
         // 이 값을 사용해 사용자 정보를 구성합니다.
         Map<String, Object> customAttributes = Map.of(
-            "id", userId,
-            "name", nickname // 또는 "name", response.get("name")로 실제 이름을 사용할 수 있습니다.
+            "id", username, 
+            "name", username // 또는 "name", response.get("name")로 실제 이름을 사용할 수 있습니다.
         );
 
         return new DefaultOAuth2User(

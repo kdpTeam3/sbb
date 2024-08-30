@@ -17,11 +17,19 @@ public class SiteUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String username;
+    // 이 부분에 userId 속성을 추가합니다.
+    private String userId; 
 
+    private String username;
+    private String email;
     private String password;
 
-    @Column(unique = true)
-    private String email;
+    // getter와 setter 메서드 추가
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 }
