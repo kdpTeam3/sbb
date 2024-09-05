@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Lazy;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public CustomOAuth2UserService(@Lazy UserService userService) {
@@ -50,16 +51,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new IllegalArgumentException("Unsupported registrationId: " + registrationId);
         }
 
-        // 사용자 정보를 DB에 저장하거나 가져옵니다.
-        SiteUser user = userService.getUser(username);
-        if (user == null) {
-            user = new SiteUser();
-            user.setUsername(username);
-            user.setEmail(email);
-            userService.create(user.getUsername(), user.getEmail(), "");
+        // 이메일이 유효하지 않을 경우 예외 처리
+        if (email == null) {
+            throw new IllegalArgumentException("이메일 정보를 가져올 수 없습니다.");
         }
 
-        // 사용자 정보를 반환합니다.
+        // 이메일 중복 체크 및 처리
+        Optional<SiteUser> existingUser = userService.findByEmail(email);
+        SiteUser user;
+        if (existingUser.isPresent()) {
+            // 이미 존재하는 사용자는 가져오기
+            user = existingUser.get();
+        } else {
+            // 새로운 사용자 생성
+            user = userService.create(username, email, "");
+        }
+
+        // 사용자 정보를 반환
         Map<String, Object> customAttributes = Map.of(
             "id", username,
             "name", username
