@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -120,5 +121,10 @@ public class UserController {
         SiteUser siteUser = this.userService.getUser(principal.getName());
         model.addAttribute("user", siteUser);
         return "user_info";
+    }
+    @ExceptionHandler(IllegalStateException.class)
+    public String handleEmailDuplication(Exception e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "login"; // 로그인 페이지로 이동
     }
 }

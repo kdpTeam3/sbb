@@ -56,6 +56,7 @@ public class UserService {
         siteUser.setEmail(email);
         this.userRepository.save(siteUser);
     }
+    
 
     @Transactional
     public void delete(SiteUser siteUser) {
@@ -66,4 +67,6 @@ public class UserService {
         // 최종적으로 사용자 삭제
         this.userRepository.delete(siteUser);
     }
+    
+    
 }

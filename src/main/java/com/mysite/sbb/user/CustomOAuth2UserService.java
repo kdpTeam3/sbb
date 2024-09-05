@@ -14,7 +14,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import lombok.RequiredArgsConstructor;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -29,27 +28,41 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
 
-        // 네이버에서 반환하는 사용자 정보
+        // 네이버와 카카오를 구분하여 처리
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+        String username;
+        String email;
 
-        // 사용자 ID와 닉네임을 가져옵니다.
-        String username = (String) response.get("nickname");
+        if ("naver".equals(registrationId)) {
+            // 네이버 사용자 정보
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            username = (String) response.get("nickname");
+            email = (String) response.get("email");
+        } else if ("kakao".equals(registrationId)) {
+            // 카카오 사용자 정보
+            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+            username = (String) profile.get("nickname");
+            email = (String) kakaoAccount.get("email");
+        } else {
+            throw new IllegalArgumentException("Unsupported registrationId: " + registrationId);
+        }
 
         // 사용자 정보를 DB에 저장하거나 가져옵니다.
         SiteUser user = userService.getUser(username);
         if (user == null) {
             user = new SiteUser();
             user.setUsername(username);
-            user.setEmail((String) response.get("email"));
+            user.setEmail(email);
             userService.create(user.getUsername(), user.getEmail(), "");
         }
 
-        // 이 값을 사용해 사용자 정보를 구성합니다.
+        // 사용자 정보를 반환합니다.
         Map<String, Object> customAttributes = Map.of(
-            "id", username, 
-            "name", username // 또는 "name", response.get("name")로 실제 이름을 사용할 수 있습니다.
+            "id", username,
+            "name", username
         );
 
         return new DefaultOAuth2User(
