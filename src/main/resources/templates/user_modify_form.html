@@ -27,12 +27,19 @@
                 <input type="text" th:field="*{username}" class="form-control" id="username" readonly>
             </div>
 
+            <!-- 이메일 에러 메시지 표시 -->
             <div th:if="${#fields.hasErrors('email')}" class="alert alert-danger" role="alert">
                 <span th:errors="*{email}"></span>
             </div>
+            
+            <!-- 이메일 입력 필드 -->
             <div class="mb-3">
                 <label for="email" class="form-label">이메일</label>
-                <input type="email" th:field="*{email}" class="form-control" id="email">
+                <!-- 이메일 입력 시 정규 표현식에 맞는지 확인 -->
+                <input type="email" th:field="*{email}" class="form-control" id="email"
+                    placeholder="이메일을 입력하세요" 
+                    pattern="^[a-zA-Z0-9][a-zA-Z0-9-_.]*@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-_]+(\\.[a-zA-Z0-9-_]+)?$"
+                    title="유효한 이메일 주소를 입력해주세요.">
             </div>
             
             <button type="submit" class="btn btn-primary w-100">수정하기</button>

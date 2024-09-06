@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 public class UserModifyForm {
 
-    // 사용자 ID: 영문자와 숫자로만 구성되며, 5자 이상 15자 이하로 제한
-    @Pattern(regexp = "^[a-zA-Z0-9]{5,15}$", message = "사용자 ID는 영문자와 숫자만 사용할 수 있으며, 5자 이상 15자 이하로 입력해주세요.")
-    @NotEmpty(message = "사용자 ID는 필수 항목입니다.")
     private String username;
 
     // 이메일: 정규 표현식으로 유효한 이메일 형식 검증

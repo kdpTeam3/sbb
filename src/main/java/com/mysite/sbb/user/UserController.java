@@ -52,6 +52,10 @@ public class UserController {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "signup_form";
+        } catch (IllegalArgumentException e) {
+            // 이메일 중복 시 처리
+            bindingResult.reject("signupFailed", "이미 등록된 이메일입니다.");
+            return "signup_form";
         } catch (Exception e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", e.getMessage());
@@ -74,7 +78,7 @@ public class UserController {
     @GetMapping("/modify")
     public String userModifyForm(UserModifyForm userModifyForm, Principal principal, Model model) {
         SiteUser siteUser = this.userService.getUser(principal.getName());
-        
+
         // 로그로 Principal 확인
         System.out.println("Logged in user: " + principal.getName());
 
@@ -90,13 +94,25 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify")
-    public String userModify(@Valid UserModifyForm userModifyForm, BindingResult bindingResult, Principal principal) {
+    public String userModify(@Valid UserModifyForm userModifyForm, BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
             return "user_modify_form";
         }
 
-        SiteUser siteUser = this.userService.getUser(principal.getName());
-        this.userService.modify(siteUser, userModifyForm.getUsername(), userModifyForm.getEmail());
+        // 이메일 중복 확인
+        try {
+            SiteUser siteUser = this.userService.getUser(principal.getName());
+            this.userService.modify(siteUser, userModifyForm.getUsername(), userModifyForm.getEmail());
+        } catch (IllegalArgumentException e) {
+            // 이메일 중복 오류 처리
+            bindingResult.reject("modifyFailed", "이미 등록된 이메일입니다.");
+            return "user_modify_form";
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            bindingResult.reject("modifyFailed", "중복된 이메일 또는 다른 문제가 발생했습니다.");
+            return "user_modify_form";
+        }
+
         return "redirect:/";
     }
 
