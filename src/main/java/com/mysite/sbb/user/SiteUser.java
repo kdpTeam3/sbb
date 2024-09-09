@@ -23,6 +23,7 @@ public class SiteUser {
     private String username;
     private String email;
     private String password;
+    private String workout;
 
     // getter와 setter 메서드 추가
     public String getUserId() {
