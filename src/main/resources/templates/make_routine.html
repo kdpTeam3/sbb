@@ -32,9 +32,11 @@
 <body>
 <!-- 네비게이션 바 -->
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
-<h1>루틴 만들기</h1>
 
+
+<h1>루틴 만들기</h1>
 <label for="workoutDays">일주일에 몇 번 운동 하나요?</label>
+
 <form action="">
     <select name="days" id="workoutDays">
         <option value="1">1 번</option>
@@ -49,9 +51,8 @@
 
 <button onclick="createInputs()">생성</button>
 
-<div id="inputsContainer" class="input-container"></div>
-
 <!-- Modal HTML -->
+<div id="inputsContainer" class="input-container"></div>
 <div class="modal fade" id="exerciseModal" tabindex="-1" aria-labelledby="exerciseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -114,6 +115,14 @@
         </div>
     </div>
 </div>
+
+<div>
+    <form action="" method="get">
+        <input type="text" placeholder="운동 입력">
+        <input type="submit">
+    </form>
+</div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
