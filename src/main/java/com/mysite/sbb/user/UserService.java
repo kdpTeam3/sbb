@@ -66,4 +66,10 @@ public class UserService {
         // 최종적으로 사용자 삭제
         this.userRepository.delete(siteUser);
     }
+
+
+    public SiteUser findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+    }
 }

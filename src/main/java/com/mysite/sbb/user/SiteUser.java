@@ -18,8 +18,10 @@ public class SiteUser {
     private Long id;
 
     // 이 부분에 userId 속성을 추가합니다.
-    private String userId; 
 
+    private String userId;
+
+    @Column(unique = true)
     private String username;
     private String email;
     private String password;

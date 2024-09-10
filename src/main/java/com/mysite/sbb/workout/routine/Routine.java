@@ -1,5 +1,6 @@
 package com.mysite.sbb.workout.routine;
 
+import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,8 +9,8 @@ import lombok.Data;
 public class Routine {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 생성 전략 설정
+    private Long id; // Long 타입의 자동 생성 ID
 
     @Column(name = "day_of_week")
     private String dayOfWeek;
@@ -26,13 +27,22 @@ public class Routine {
     @Column(name = "weight")
     private Integer weight;
 
-    public Routine(){}
+    @ManyToOne
+    @JoinColumn(name = "username",referencedColumnName = "username") // 외래 키로 사용
+    private SiteUser siteUser;
 
-    public Routine(String dayOfWeek, String bodyPart, Integer sets, Integer reps, Integer weight){
+    public Routine() {
+    }
+
+    public Routine(String dayOfWeek, String bodyPart, Integer sets, Integer reps, Integer weight, SiteUser siteUser) {
+
         this.dayOfWeek = dayOfWeek;
         this.bodyPart = bodyPart;
         this.sets = sets;
         this.reps = reps;
         this.weight = weight;
+        this.siteUser = siteUser;
+
     }
+
 }
